@@ -125,12 +125,12 @@ void SignalGenerator::makeGas(){
 	fMediumMagboltz->SetTemperature(288.15);
 	fMediumMagboltz->SetPressure(pressure*0.76);
 	fMediumMagboltz->EnableDebugging();
-  	fMediumMagboltz->Initialise(true);
-    fMediumMagboltz->DisableDebugging();
+	fMediumMagboltz->Initialise(true);
+  fMediumMagboltz->DisableDebugging();
   // Set the Penning transfer efficiency.
-  	const double rPenning = 1;
-  	const double lambdaPenning = 0.;
-  	fMediumMagboltz->EnablePenningTransfer(rPenning, lambdaPenning, "helium");
+	const double rPenning = 1;
+	const double lambdaPenning = 0.;
+	fMediumMagboltz->EnablePenningTransfer(rPenning, lambdaPenning, "helium");
 //	fMediumMagboltz->EnablePenningTransfer(rPenning, lambdaPenning, "NEO-PENTANE");
 // Load the ion mobilities.
 
@@ -149,12 +149,7 @@ void SignalGenerator::makeGas(){
   		const std::string path = getenv("GARFIELD_HOME");
   		fMediumMagboltz->LoadIonMobility(path + "/Data/IonMobility_He+_He.txt");
   	}
-
-
-
 }
-
-
 
 void SignalGenerator::buildBox(){
 	geo = new Garfield::GeometrySimple();
@@ -548,52 +543,58 @@ void SignalGenerator::Run() {
 		  			int nInitEl=0;
 		  			int nDetEl=0;
 		  			while(fTrackHeed->GetCluster(x_pos, y_pos, z_pos, t, nc, energy, extra)) { //Loop over all created clusters
-						while (nc) {
-							nc--;
-					  		double xe, ye, ze, te;
-					  		double ee, dxe, dye, dze;
-					  		fTrackHeed->GetElectron(nc, xe, ye, ze, te, ee, dxe, dye, dze);
-					  		if(std::sqrt(xe*xe+ye*ye)>1.5) continue;
-					  		if(driftRKF) {
-		                		fDriftRKF->DriftElectron(xe,ye,ze,te);
-		                		if(driftIons) fDriftRKF->DriftIon(xe,ye,ze,te);
-				            }
-							else if(trackMicro){
-								fAvalanche->AvalancheElectron(xe, ye, ze, te, ee, dxe, dye, dze);
-								int neTemp=0,niTemp=0;
-								fAvalanche->GetAvalancheSize(neTemp, niTemp);
-								ne+=(float)neTemp;
-								ni+=(float)niTemp;
-								if(driftIons){
-									const int np = fAvalanche->GetNumberOfElectronEndpoints();
-		    						double xe1, ye1, ze1, te1, e1;
-		    						double xe2, ye2, ze2, te2, e2;
-		    						int status;
-								    for (int j = np; j--;) {
-								      fAvalanche->GetElectronEndpoint(j, xe1, ye1, ze1, te1, e1,
-								                                   xe2, ye2, ze2, te2, e2, status);
-								      fDrift->DriftIon(xe1, ye1, ze1, te1);
-								    }
-								}
-							}
-							else {
-								double xe1, ye1, ze1, te1;
-	    						double xe2, ye2, ze2, te2;
-	    						int status;
-								fDrift->DriftElectron(xe,ye,ze,te);
-								fDrift->GetElectronEndpoint(0, xe1, ye1, ze1, te1, xe2, ye2, ze2, te2, status);
-								if(std::sqrt(xe*xe+ye*ye)<1){
-									nInitEl++;
-									if(WireIsHit(status,xe2,ye2)) nDetEl++;
-								}
-								unsigned int neTemp=0,niTemp=0;
-								fDrift->GetAvalancheSize(neTemp, niTemp);
-								ne+=(float)neTemp;
-								ni+=(float)niTemp;
-								if(driftIons) fDrift->DriftIon(xe,ye,ze,te);
-							}
-						}
-			  		}
+              while (nc) {
+                nc--;
+                double xe, ye, ze, te;
+                double ee, dxe, dye, dze;
+                bool wire_hit=false;
+                fTrackHeed->GetElectron(nc, xe, ye, ze, te, ee, dxe, dye, dze);
+                if(std::sqrt(xe*xe+ye*ye)>1.5) continue;
+                if(driftRKF) {
+                  fDriftRKF->DriftElectron(xe,ye,ze,te);
+                  if(driftIons) fDriftRKF->DriftIon(xe,ye,ze,te);
+                }
+                else if(trackMicro){
+                  fAvalanche->AvalancheElectron(xe, ye, ze, te, ee, dxe, dye, dze);
+                  int neTemp=0,niTemp=0;
+                  fAvalanche->GetAvalancheSize(neTemp, niTemp);
+                  ne+=(float)neTemp;
+                  ni+=(float)niTemp;
+                  if(driftIons){
+                    const int np = fAvalanche->GetNumberOfElectronEndpoints();
+                    double xe1, ye1, ze1, te1, e1;
+                    double xe2, ye2, ze2, te2, e2;
+                    int status;
+                    for (int j = np; j--;) {
+                      fAvalanche->GetElectronEndpoint(j, xe1, ye1, ze1, te1, e1,
+                                                xe2, ye2, ze2, te2, e2, status);
+                      if(WireIsHit(status,xe2,ye2)) {
+                        nDetEl++;
+                        wire_hit=true;
+                      }
+                      fDrift->DriftIon(xe1, ye1, ze1, te1);
+                    }
+                    if(wire_hit) nInitEl++;
+                  }
+                }
+                else {
+                  double xe1, ye1, ze1, te1;
+                  double xe2, ye2, ze2, te2;
+                  int status;
+                  fDrift->DriftElectron(xe,ye,ze,te);
+                  fDrift->GetElectronEndpoint(0, xe1, ye1, ze1, te1, xe2, ye2, ze2, te2, status);
+                  if(std::sqrt(xe*xe+ye*ye)<1){
+                    nInitEl++;
+                    if(WireIsHit(status,xe2,ye2)) nDetEl++;
+                  }
+                  unsigned int neTemp=0,niTemp=0;
+                  fDrift->GetAvalancheSize(neTemp, niTemp);
+                  ne+=(float)neTemp;
+                  ni+=(float)niTemp;
+                  if(driftIons) fDrift->DriftIon(xe,ye,ze,te);
+                }
+              }
+            }
 			  		ProcessEvent(ne,ni,nInitEl,nDetEl);
 			  	}
 	  		}
