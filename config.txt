@@ -1,0 +1,46 @@
+[Signal]
+Resolution=0.5				# ns/bin resolution of the signal histogram
+Length=1500.				# Length of the signal window in ns
+Transfer=impulse_response_an.txt	# load transfer function from file (true) or use analytical form of a CR-RC shaper
+Full=true				# output the full raw signal (true) or just ADC and TDC (false)
+View=false				# view signal (true) or not (false)
+Threshold=50				# Set threshold for the TDC trigger (<0 if cfd is to be used)
+
+[Mixture]
+Iso=20   				# Percentage of isobutane
+Pres=300 				# Pressure in mbar
+
+[Tracking]
+Track=true            			# Full tracking (true) or create drift electrons only (false)
+Avalanche = false       		# Enable avalanche creation
+DriftInt=false          		# Integrate the drift line (true) or use Monte Carlo (false)
+Microscopic = false 			# Create real avalanches or simply simulate the multiplication
+DriftIons = false			# Drift only electrons (false) of drift ions too (true)
+View = false				# View drift lines (true) or not (false)
+AvalancheSize=-1			# Set the maximum avalanche size
+FullChamber=false			# Use the full chamber
+
+[Field]
+SigWireV=1500.0				# Potential for the signal wire (V) plane 9
+SigWireVUpper=1500.0    		# Potential for the signal wire (V) plane 10
+SigWireVLower=1500.0    		# Potential for the signal wire (V) plane 8
+SigWireV1=2160				# Potential for the signal wire (V) plane 1
+SigWireV2=2230          		# Potential for the signal wire (V) plane 2
+SigWireV3=2260          		# Potential for the signal wire (V) plane 3
+SigWireV4=2250          		# Potential for the signal wire (V) plane 4
+SigWireV5=2260          		# Potential for the signal wire (V) plane 5
+SigWireV6=2250          		# Potential for the signal wire (V) plane 6
+SigWireV7=2250          		# Potential for the signal wire (V) plane 7
+SigWireV8=2260          		# Potential for the signal wire (V) plane 8
+SigWireV9=2230          		# Potential for the signal wire (V) plane 9
+SigWireV10=2160         		# Potential for the signal wire (V) plane 10
+FieldWireV=0.0				# Magnitude of field wire potential (V)
+COMSOL=false   				# Use COMSOL for the field calculation (true) or Garfield (false)
+View=true				# Single(false) or multiple(true) cell configuration
+PlotProfileCell=68			# Plot the electric field profile for this cell
+
+[Particle]
+Energy=1				# Electron energy in MeV
+Type=mu-				# particle type (e+ or e-)
+Number=1				# Number of simulations
+CustomEnergy=false			# Custom energy distribution for muons
