@@ -604,8 +604,8 @@ void SignalGenerator::Run() {
   		while(getline(input,line)){
   			std::cout << "Loop over input file lines" << std::endl;
   			std::istringstream stream(line);
-  			stream >> x >> y;
-  			anManager->SetInitParam(x,y,0,0,0);
+  			stream >> x >> y >> z;
+  			anManager->SetInitParam(x,y,z,0,0,0,0);
   			for(int j=0;j<nSim;j++){
   				float ne=0, ni=0;
   				if (j % 10 == 0) std::cout << "Event " << j << std::endl;
