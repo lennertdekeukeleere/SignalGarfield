@@ -176,7 +176,7 @@ void SignalGenerator::buildBox(){
 	else{
 		gasboxhalfX = 3.;
 		gasboxhalfY = 3.;
-		gasboxhalfZ = 3.;
+		gasboxhalfZ = 12.;
 		offset = 0.;
 		muonPlane = gasboxhalfY;
 	}
@@ -583,9 +583,9 @@ void SignalGenerator::Run() {
                   int status;
                   fDrift->DriftElectron(xe,ye,ze,te);
                   fDrift->GetElectronEndpoint(0, xe1, ye1, ze1, te1, xe2, ye2, ze2, te2, status);
-                  if(std::sqrt(xe*xe+ye*ye)<1){
+                  if(WireIsHit(status,xe2,ye2)) {
+                    nDetEl++;
                     nInitEl++;
-                    if(WireIsHit(status,xe2,ye2)) nDetEl++;
                   }
                   unsigned int neTemp=0,niTemp=0;
                   fDrift->GetAvalancheSize(neTemp, niTemp);
