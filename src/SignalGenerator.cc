@@ -281,7 +281,7 @@ void SignalGenerator::BuildSensor(){
 	if(transferFilename == "")
 		fSensor->SetTransferFunction(transfer);
 	else
-                SetTransferFile(transferFilename);
+    SetTransferFile(transferFilename);
 
 	fSensor->AddComponent(comp);
 
@@ -467,7 +467,7 @@ void SignalGenerator::Run() {
   		if(muonDist){
   			for(int j=0;j<nSim;j++){
   				muonGen->nextBeamEvent(x,y,z,dx,dy,dz,ekin);
-  				anManager->SetInitParam(x,y,dx,dy,ekin);
+  				anManager->SetInitParam(x,y,z,dx,dy,dz,ekin);
   				fTrackHeed->SetKineticEnergy(1e9);
   				float ne=0, ni=0;
   				if (j % 10 == 0) std::cout << "Event " << j << std::endl;
@@ -530,14 +530,14 @@ void SignalGenerator::Run() {
   		else{
 	  		while(getline(input,line)){
 	  			std::istringstream stream(line);
-	  			stream >> x >> y >> dx >> dy >> ekin;
-	  			anManager->SetInitParam(x,y,dx,dy,ekin);
+	  			stream >> x >> y >> z >> dx >> dy >> dz >> ekin;
+	  			anManager->SetInitParam(x,y,z,dx,dy,dz,ekin);
 	  			fTrackHeed->SetKineticEnergy(ekin*1000000.);
 	  			for(int j=0;j<nSim;j++){
 	  				float ne=0, ni=0;
 	  				if (j % 10 == 0) std::cout << "Event " << j << std::endl;
 	  				fSensor->ClearSignal();
-		  			fTrackHeed->NewTrack(x,y,0,0,dx,dy,0);
+		  			fTrackHeed->NewTrack(x,y,z,0,dx,dy,dz);
 		  			double x_pos,y_pos,z_pos,t,energy,extra;
 		  			int nc;
 		  			int nInitEl=0;

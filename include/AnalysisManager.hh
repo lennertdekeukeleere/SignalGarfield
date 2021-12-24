@@ -29,8 +29,8 @@ class AnalysisManager{
 	~AnalysisManager(){};
 	void ProcessEvent(Garfield::Sensor*, float ne, float ni, int nInitEl,int nDetEl, double threshold);
 	void Initialise(Garfield::Sensor*, bool full);
-        void SetInitParam(double,double,double,double,double);
-        void Write();
+  void SetInitParam(double,double,double,double,double,double,double);
+  void Write();
 
 	private:
 	double GetTDC(TH1D*,double threshold,bool);
@@ -48,9 +48,9 @@ class AnalysisManager{
         double tdcIon,adcIon;
         float nEl, nIon;
 	int nInitE,nDetE;
-        double x,y,dx,dy,ekin;
+        double x,y,z,dx,dy,dz,ekin;
 	double signalH;
-	std::ofstream outfile;	
+	std::ofstream outfile;
 
 };
 

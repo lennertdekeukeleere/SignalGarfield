@@ -35,8 +35,10 @@ void AnalysisManager::Initialise(Garfield::Sensor* sens, bool full){
 	tree->Branch("NumOfDetEl",&nDetE);
 	tree->Branch("Xinit",&x);
 	tree->Branch("Yinit",&y);
+	tree->Branch("Zinit",&z);
 	tree->Branch("PXinit",&dx);
 	tree->Branch("PYinit",&dy);
+	tree->Branch("PZinit",&dz);
 	tree->Branch("EKinit",&ekin);
 
 	//char buffer[20];
@@ -48,11 +50,13 @@ void AnalysisManager::Initialise(Garfield::Sensor* sens, bool full){
 
 }
 
-void AnalysisManager::SetInitParam(double x0,double y0, double dx0, double dy0, double e0){
+void AnalysisManager::SetInitParam(double x0,double y0, double z0, double dx0, double dy0, double dz0, double e0){
 	x=x0;
 	y=y0;
+	z=z0;
 	dx=dx0;
 	dy=dy0;
+	dz=dz0;
 	ekin=e0;
 	outfile << x << " " << y;
 }
