@@ -99,7 +99,7 @@ void AnalysisManager::Write(){
 	outfile.close();
 }
 
-double AnalysisManager::GetTDC(TH1D* hist, double thresh_level, double factor){
+double AnalysisManager::GetTDC(TH1D* hist, double factor, double thresh_level){
 	for(int i = 1; i<=hist->GetSize()-2; i++){
 		if(hist->GetBinContent(i)*factor>thresh_level)
 			return hist->GetBinLowEdge(i);
