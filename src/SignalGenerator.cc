@@ -724,7 +724,7 @@ double transfer(double t){
 }
 
 bool SignalGenerator::WireIsHit(int status,double x,double y, double z){
-  std::cout << "Status: " << status << ", (x,y,z): (" << x << "," << y << "," << z << ")" << std::endl;
+  // std::cout << "Status: " << status << ", (x,y,z): (" << x << "," << y << "," << z << ")" << std::endl;
 	if(status != Garfield::StatusLeftDriftMedium) return false;
 	if(std::sqrt(x*x+y*y)<2*Swr) return true;
 	return false;
