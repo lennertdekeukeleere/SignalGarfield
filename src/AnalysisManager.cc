@@ -79,7 +79,7 @@ void AnalysisManager::ProcessEvent(Garfield::Sensor* sens,float ne, float ni, in
 		ionSignalHist->Fill(i*tStep,sens->GetIonSignal("s",i));
 	}
 	double sig_h, sig_h1, sig_h2;
-	thresh_level = GetADC(totalSignalHist,true,1.,adcTotal,signalH,signalHat100ns,signalHat200ns);
+	double thresh_level = GetADC(totalSignalHist,true,1.,adcTotal,signalH,signalHat100ns,signalHat200ns);
 	if(threshold>0) thresh_level=threshold;
 	tdcTotal = GetTDC(totalSignalHist,1.,thresh_level);
 	thresh_level = GetADC(electronSignalHist,true,-1.,adcElectron,signalHElectron,sig_h1,sig_h2);
@@ -99,9 +99,9 @@ void AnalysisManager::Write(){
 	outfile.close();
 }
 
-double AnalysisManager::GetTDC(TH1D* hist, double thresh_level){
+double AnalysisManager::GetTDC(TH1D* hist, double thresh_level, double factor){
 	for(int i = 1; i<= nbins; i++){
-		if(hist->GetBinContent(i)>thresh_level)
+		if(hist->GetBinContent(i)*factor>thresh_level)
 			return hist->GetBinLowEdge(i);
 	}
 	return -1.;
