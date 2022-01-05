@@ -314,7 +314,7 @@ void SignalGenerator::SetTracking(){
 	fTrackHeed = new Garfield::TrackHeed();
         fTrackHeed->SetSensor(fSensor);
         fTrackHeed->SetParticle(particleType);
-//	fTrackHeed->EnableDebugging();
+	fTrackHeed->EnableDebugging();
 	fTrackHeed->EnableDeltaElectronTransport();
 
 }
@@ -570,11 +570,10 @@ void SignalGenerator::Run() {
                                                 xe2, ye2, ze2, te2, e2, status);
                       if(WireIsHit(status,xe2,ye2)) {
                         nDetEl++;
-                        wire_hit=true;
                       }
                       fDrift->DriftIon(xe1, ye1, ze1, te1);
                     }
-                    if(wire_hit) nInitEl++;
+                    nInitEl++;
                   }
                 }
                 else {
@@ -585,8 +584,8 @@ void SignalGenerator::Run() {
                   fDrift->GetElectronEndpoint(0, xe1, ye1, ze1, te1, xe2, ye2, ze2, te2, status);
                   if(WireIsHit(status,xe2,ye2)) {
                     nDetEl++;
-                    nInitEl++;
                   }
+                  nInitEl++;
                   unsigned int neTemp=0,niTemp=0;
                   fDrift->GetAvalancheSize(neTemp, niTemp);
                   ne+=(float)neTemp;

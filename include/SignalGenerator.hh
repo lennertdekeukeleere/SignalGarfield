@@ -85,7 +85,7 @@ class SignalGenerator {
 
     std::vector<double> transferTimeVector;
     std::vector<double> transferValuesVector;
-    
+
     void makeGas();
     void buildBox();
     void BuildCompField();
@@ -110,7 +110,7 @@ class SignalGenerator {
     bool signalCFD;
     bool fullChamber;
     bool muonDist;
-    
+
     double fBinWidth;
     int fNbins;
     double sigWireVoltage;
@@ -133,8 +133,8 @@ class SignalGenerator {
     std::string transferFilename;
     int nrofPlanes;
     int nrofWiresPlane;
-    double Swr = 25.e-4;
-    double Fwr = 75.e-4;
+    double Swr = 12.5e-4;
+    double Fwr = 50.e-4;
     double cellR = sqrt(3)*0.5;
     double planespacing = 0.5;
     double planeOffset = 2.95;
@@ -150,9 +150,8 @@ class SignalGenerator {
     double signalWireVoltages[10];
 
     int cellNr;
-    
+
 };
 
 double transfer(double t);
 #endif /* GARFIELDMODELCONFIG_HH_ */
-
