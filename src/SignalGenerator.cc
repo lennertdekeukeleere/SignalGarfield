@@ -581,8 +581,8 @@ void SignalGenerator::Run() {
                   double xe2, ye2, ze2, te2;
                   int status;
                   fDrift->DriftElectron(xe,ye,ze,te);
-                  fDrift->GetElectronEndpoint(fDrift->GetNumberOfElectronEndpoints(), xe1, ye1, ze1, te1, xe2, ye2, ze2, te2, status);
-                  if(WireIsHit(status,xe2,ye2,ze2)) {
+                  fDrift->GetElectronEndpoint(fDrift->GetNumberOfElectronEndpoints()-1, xe1, ye1, ze1, te1, xe2, ye2, ze2, te2, status);
+                  if(WireIsHit(status,xe1,ye1,ze1)) {
                     nDetEl++;
                   }
                   nInitEl++;
