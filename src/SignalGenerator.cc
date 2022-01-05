@@ -314,7 +314,7 @@ void SignalGenerator::SetTracking(){
 	fTrackHeed = new Garfield::TrackHeed();
         fTrackHeed->SetSensor(fSensor);
         fTrackHeed->SetParticle(particleType);
-	fTrackHeed->EnableDebugging();
+//	fTrackHeed->EnableDebugging();
 	fTrackHeed->EnableDeltaElectronTransport();
 
 }
@@ -325,7 +325,7 @@ void SignalGenerator::CreateChamberView(){
 	cellView->SetComponent(comp);
 	cellView->SetCanvas(fChamber);
 	std::cout << "Canvas Set" << std::endl;
-	cellView->Plot3d();
+	cellView->Plot2d();
 	fChamber->Update();
 	fChamber->Print("chamber_configuration.pdf");
 //	gSystem->ProcessEvents();
@@ -656,7 +656,7 @@ void SignalGenerator::Run() {
 void SignalGenerator::ProcessEvent(float ne, float ni, int nInitEl, int nDetEl){
 	anManager->ProcessEvent(fSensor,ne,ni,nInitEl,nDetEl,signalThreshold);
 	if(visualizeChamber){
-		viewDrift->Plot(false,false);
+		viewDrift->Plot(true,false);
 		fChamber->Update();
 		fChamber->Print("chamberview.pdf");
 	}
@@ -724,7 +724,7 @@ double transfer(double t){
 }
 
 bool SignalGenerator::WireIsHit(int status,double x,double y){
-	if(status != Garfield::StatusLeftDriftMedium) return false;
+	// if(status != Garfield::StatusLeftDriftMedium) return false;
 	if(std::sqrt(x*x+y*y)<Swr) return true;
 	return false;
 }
