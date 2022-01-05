@@ -325,7 +325,7 @@ void SignalGenerator::CreateChamberView(){
 	cellView->SetComponent(comp);
 	cellView->SetCanvas(fChamber);
 	std::cout << "Canvas Set" << std::endl;
-	cellView->Plot2d();
+	cellView->Plot3d();
 	fChamber->Update();
 	fChamber->Print("chamber_configuration.pdf");
 //	gSystem->ProcessEvents();
@@ -656,7 +656,7 @@ void SignalGenerator::Run() {
 void SignalGenerator::ProcessEvent(float ne, float ni, int nInitEl, int nDetEl){
 	anManager->ProcessEvent(fSensor,ne,ni,nInitEl,nDetEl,signalThreshold);
 	if(visualizeChamber){
-		viewDrift->Plot(true,false);
+		viewDrift->Plot(false,false);
 		fChamber->Update();
 		fChamber->Print("chamberview.pdf");
 	}
