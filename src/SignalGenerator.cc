@@ -723,8 +723,9 @@ double transfer(double t){
 	return Vout;
 }
 
-bool SignalGenerator::WireIsHit(int status,double x,double y){
-	// if(status != Garfield::StatusLeftDriftMedium) return false;
+bool SignalGenerator::WireIsHit(int status,double x,double y, double z){
+  std::cout << "Status: " << status << ", (x,y,z): (" << x << "," << y << "," << z << ")" << std::endl;
+	if(status != Garfield::StatusLeftDriftMedium) return false;
 	if(std::sqrt(x*x+y*y)<Swr) return true;
 	return false;
 }

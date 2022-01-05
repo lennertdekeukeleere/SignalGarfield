@@ -95,7 +95,7 @@ class SignalGenerator {
     void CreateSignalView();
     void CreateFieldView();
     void ReadConfigFile();
-    bool WireIsHit(int,double,double);
+    bool WireIsHit(int,double,double,double);
 
     bool loadComsolfield;
     bool trackMicro;
