@@ -582,7 +582,7 @@ void SignalGenerator::Run() {
                   int status;
                   fDrift->DriftElectron(xe,ye,ze,te);
                   fDrift->GetElectronEndpoint(fDrift->GetNumberOfElectronEndpoints()-1, xe1, ye1, ze1, te1, xe2, ye2, ze2, te2, status);
-                  if(WireIsHit(status,xe1,ye1,ze1)) {
+                  if(WireIsHit(status,xe2,ye2,ze2)) {
                     nDetEl++;
                   }
                   nInitEl++;
@@ -726,6 +726,6 @@ double transfer(double t){
 bool SignalGenerator::WireIsHit(int status,double x,double y, double z){
   std::cout << "Status: " << status << ", (x,y,z): (" << x << "," << y << "," << z << ")" << std::endl;
 	if(status != Garfield::StatusLeftDriftMedium) return false;
-	if(std::sqrt(x*x+y*y)<Swr) return true;
+	if(std::sqrt(x*x+y*y)<2*Swr) return true;
 	return false;
 }
