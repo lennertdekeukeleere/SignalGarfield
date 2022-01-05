@@ -102,7 +102,7 @@ void AnalysisManager::Write(){
 double AnalysisManager::GetTDC(TH1D* hist, double factor, double thresh_level){
 	// std::cout << "Threshold: " << thresh_level << std::endl;
 	for(int i = 1; i<=hist->GetSize()-2; i++){
-		std::cout << hist->GetBinContent(i)*factor << std::endl;
+		// std::cout << hist->GetBinContent(i)*factor << std::endl;
 		if(hist->GetBinContent(i)*factor>thresh_level)
 			return hist->GetBinLowEdge(i);
 	}
