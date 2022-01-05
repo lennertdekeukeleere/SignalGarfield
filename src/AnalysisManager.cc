@@ -25,6 +25,8 @@ void AnalysisManager::Initialise(Garfield::Sensor* sens, bool full){
 	tree->Branch("tdcTotal",&tdcTotal);
 	tree->Branch("adcTotal",&adcTotal);
 	tree->Branch("signalHeight",&signalH);
+	tree->Branch("signalHeight@100ns",&signalHat100ns);
+	tree->Branch("signalHeight@200ns",&signalHat200ns);
 	tree->Branch("tdcElectron",&tdcElectron);
 	tree->Branch("adcElectron",&adcElectron);
 	tree->Branch("tdcIon",&tdcIon);
@@ -111,17 +113,33 @@ double AnalysisManager::GetTDC(TH1D* hist, double threshold, bool calcHeight){
 		sig = hist->GetBinContent(i);
 		if (sig > vMax) vMax = sig;
 	}
-	if(calcHeight) signalH=vMax;
+	if(calcHeight){
+		signalH=vMax;
 	if(threshold<0)
 		thresh_level = vMin +(vMax-vMin)*0.2;
 	else
 		thresh_level = threshold;
 
+	double tdc = -1.0;
 	for(int i = 1; i<= nbins; i++){
-		if(hist->GetBinContent(i)>thresh_level) return hist->GetBinLowEdge(i);
+		if(hist->GetBinContent(i)>thresh_level) {
+			tdc = hist->GetBinLowEdge(i);
+			if (calcHeight){
+				signalHat100ns = hist->GetBinContent(i);
+				for (int j=i;j<i+100;j++){
+					sig = hist->GetBinContent(j);
+					if(sig > signalHat100ns) signalHat100ns = sig;
+				}
+				signalHat200ns = signalHat100ns;
+				for (int j=i+100; j<i+200;j++){
+					sig = hist->GetBinContent(j);
+					if (sig > signalHat200ns) signalHat200ns = sig;
+				}
+			}
+			break;
 	}
 
-	return -1.0;
+	return tdc;
 }
 
 double AnalysisManager::GetADC(TH1D* hist){
