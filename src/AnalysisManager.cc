@@ -113,7 +113,7 @@ double AnalysisManager::GetTDC(TH1D* hist, double threshold, bool calcHeight){
 		sig = hist->GetBinContent(i);
 		if (sig > vMax) vMax = sig;
 	}
-	if(calcHeight){
+	if(calcHeight)
 		signalH=vMax;
 	if(threshold<0)
 		thresh_level = vMin +(vMax-vMin)*0.2;
@@ -137,8 +137,8 @@ double AnalysisManager::GetTDC(TH1D* hist, double threshold, bool calcHeight){
 				}
 			}
 			break;
+		}
 	}
-
 	return tdc;
 }
 
