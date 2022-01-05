@@ -126,12 +126,12 @@ double AnalysisManager::GetTDC(TH1D* hist, double threshold, bool calcHeight){
 			tdc = hist->GetBinLowEdge(i);
 			if (calcHeight){
 				signalHat100ns = hist->GetBinContent(i);
-				for (int j=i;j<i+100;j++){
+				for (int j=i;j<400;j++){
 					sig = hist->GetBinContent(j);
 					if(sig > signalHat100ns) signalHat100ns = sig;
 				}
 				signalHat200ns = signalHat100ns;
-				for (int j=i+100; j<i+200;j++){
+				for (int j=400; j<800;j++){
 					sig = hist->GetBinContent(j);
 					if (sig > signalHat200ns) signalHat200ns = sig;
 				}
