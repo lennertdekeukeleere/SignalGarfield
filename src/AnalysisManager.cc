@@ -108,13 +108,13 @@ double AnalysisManager::GetTDC(TH1D* hist, double thresh_level, double factor){
 }
 
 double AnalysisManager::GetADC(TH1D* hist, bool calc_height, double factor, double& adc, double& sig_height,double& sig_height_1, double& sig_height_2){
-	double vMin = hist->GetBinContent(1);
-	double vMax = hist->GetBinContent(1);
+	double vMin = hist->GetBinContent(1)*factor;
+	double vMax = hist->GetBinContent(1)*factor;
 	double sig;
 	int nbins = hist->GetSize()-2;
 
 	for (int i = nbins; i>0; i--) {
-		sig = hist->GetBinContent(i);
+		sig = hist->GetBinContent(i)*factor;
 		if (sig > vMax) vMax = sig;
 	}
 	double thresh_level = vMin +(vMax-vMin)*0.2;
