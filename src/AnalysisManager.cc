@@ -29,6 +29,7 @@ void AnalysisManager::Initialise(Garfield::Sensor* sens, bool full){
 	tree->Branch("signalHeight@200ns",&signalHat200ns);
 	tree->Branch("tdcElectron",&tdcElectron);
 	tree->Branch("adcElectron",&adcElectron);
+	tree->Branch("signalHeightElectron",&signalHElectron);
 	tree->Branch("tdcIon",&tdcIon);
 	tree->Branch("adcIon",&adcIon);
 	tree->Branch("NumOfEl",&nEl);
@@ -47,8 +48,6 @@ void AnalysisManager::Initialise(Garfield::Sensor* sens, bool full){
 	//sprintf(buffer,"%s.dat",outFileName);
 	std::string datName = outFileName + ".dat";
 	outfile.open(datName.c_str());
-
-
 
 }
 
@@ -79,12 +78,14 @@ void AnalysisManager::ProcessEvent(Garfield::Sensor* sens,float ne, float ni, in
 		electronSignalHist->Fill(i*tStep,sens->GetElectronSignal("s",i));
 		ionSignalHist->Fill(i*tStep,sens->GetIonSignal("s",i));
 	}
-	tdcTotal = GetTDC(totalSignalHist,threshold,true);
-	adcTotal = GetADC(totalSignalHist);
-	tdcElectron = GetTDC(electronSignalHist,-1,false);
-	adcElectron = GetADC(electronSignalHist);
-	tdcIon = GetTDC(ionSignalHist,-1,false);
-	adcIon = GetADC(ionSignalHist);
+	double sig_h, sig_h1, sig_h2;
+	thresh_level = GetADC(totalSignalHist,true,1.,adcTotal,signalH,signalHat100ns,signalHat200ns);
+	if(threshold>0) thresh_level=threshold;
+	tdcTotal = GetTDC(totalSignalHist,1.,thresh_level);
+	thresh_level = GetADC(electronSignalHist,true,-1.,adcElectron,signalHElectron,sig_h1,sig_h2);
+	tdcElectron = GetTDC(electronSignalHist,-1.,thresh_level);
+	thresh_level = GetADC(ionSignalHist,true,-1.,adcIon,sig_h,sig_h1,sig_h2);
+	tdcIon = GetTDC(ionSignalHist,-1.,thresh_level);
 	nEl=ne;
 	nIon=ni;
 	nInitE=nInitEl;
@@ -98,12 +99,15 @@ void AnalysisManager::Write(){
 	outfile.close();
 }
 
-double AnalysisManager::GetTDC(TH1D* hist, double threshold, bool calcHeight){
-	int thresh_cross = 0;
-	double thresh_time = 0., thresh_level = 0.;
-	bool thresh_rise = true;
+double AnalysisManager::GetTDC(TH1D* hist, double thresh_level){
+	for(int i = 1; i<= nbins; i++){
+		if(hist->GetBinContent(i)>thresh_level)
+			return hist->GetBinLowEdge(i);
+	}
+	return -1.;
+}
 
-	// Establish the range.
+double AnalysisManager::GetADC(TH1D* hist, bool calc_height, double factor, double& adc, double& sig_height,double& sig_height_1, double& sig_height_2){
 	double vMin = hist->GetBinContent(1);
 	double vMax = hist->GetBinContent(1);
 	double sig;
@@ -113,41 +117,31 @@ double AnalysisManager::GetTDC(TH1D* hist, double threshold, bool calcHeight){
 		sig = hist->GetBinContent(i);
 		if (sig > vMax) vMax = sig;
 	}
-	if(calcHeight)
-		signalH=vMax;
-	if(threshold<0)
-		thresh_level = vMin +(vMax-vMin)*0.2;
-	else
-		thresh_level = threshold;
+	thresh_level = vMin +(vMax-vMin)*0.2;
 
-	double tdc = -1.0;
-	for(int i = 1; i<= nbins; i++){
-		if(hist->GetBinContent(i)>thresh_level) {
-			tdc = hist->GetBinLowEdge(i);
-			if (calcHeight){
-				signalHat100ns = hist->GetBinContent(i);
-				for (int j=i;j<400;j++){
-					sig = hist->GetBinContent(j);
-					if(sig > signalHat100ns) signalHat100ns = sig;
-				}
-				signalHat200ns = signalHat100ns;
-				for (int j=400; j<800;j++){
-					sig = hist->GetBinContent(j);
-					if (sig > signalHat200ns) signalHat200ns = sig;
-				}
-			}
-			break;
-		}
-	}
-	return tdc;
-}
-
-double AnalysisManager::GetADC(TH1D* hist){
-	double adc = 0.;
-	int nbins = hist->GetSize()-2;
+	adc = 0.;
 	for(int i=1; i<nbins; i++){
-//		G4cout << "Wire: " << s << "Signalheight at " << i << " : " <<  fSensor->GetSignal(s,i)*fBinWidth << G4endl;
-		adc+= hist->GetBinContent(i)*hist->GetBinWidth(i);
+		adc+= hist->GetBinContent(i)*factor*hist->GetBinWidth(i);
 	}
-	return adc;
+
+	sig_height = -1;
+	sig_height_1 = -1;
+	sig_height_2 = -1;
+
+	double sig;
+
+	if (calc_height){
+		for (int j=0;j<400;j++){
+			sig = hist->GetBinContent(j)*factor;
+			if(sig > sig_height_1) sig_height_1 = sig;
+		}
+		sig_height_2 = sig_height_1;
+		for (int j=400; j<800;j++){
+			sig = hist->GetBinContent(j)*factor;
+			if (sig > sig_height_2) sig_height_2 = sig;
+		}
+		sig_height = vMax
+	}
+
+	return thresh_level;
 }

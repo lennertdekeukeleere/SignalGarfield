@@ -33,8 +33,8 @@ class AnalysisManager{
 	  void Write();
 
 	private:
-		double GetTDC(TH1D*,double threshold,bool);
-		double GetADC(TH1D*);
+		double GetTDC(TH1D*,double,double);
+		double GetADC(TH1D*, bool, double, double&, double&,double&, double&);
 
 		std::string outFileName;
 
@@ -49,7 +49,7 @@ class AnalysisManager{
 		float nEl, nIon;
 		int nInitE,nDetE;
 		double x,y,z,dx,dy,dz,ekin;
-		double signalH, signalHat100ns, signalHat200ns;
+		double signalH, signalHat100ns, signalHat200ns,signalHElectron;
 		std::ofstream outfile;
 
 };
