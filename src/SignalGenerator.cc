@@ -514,7 +514,7 @@ void SignalGenerator::Run() {
 							fDrift->GetElectronEndpoint(0, xe1, ye1, ze1, te1, xe2, ye2, ze2, te2, status);
 							if(std::sqrt(xe*xe+ye*ye)<1){
 								nInitEl++;
-								if(WireIsHit(status,xe2,ye2)) nDetEl++;
+								if(WireIsHit(status,xe2,ye2,ze2)) nDetEl++;
 							}
 							unsigned int neTemp=0,niTemp=0;
 							fDrift->GetAvalancheSize(neTemp, niTemp);
@@ -568,7 +568,7 @@ void SignalGenerator::Run() {
                     for (int j = np; j--;) {
                       fAvalanche->GetElectronEndpoint(j, xe1, ye1, ze1, te1, e1,
                                                 xe2, ye2, ze2, te2, e2, status);
-                      if(WireIsHit(status,xe2,ye2)) {
+                      if(WireIsHit(status,xe2,ye2,ze2)) {
                         nDetEl++;
                       }
                       fDrift->DriftIon(xe1, ye1, ze1, te1);
@@ -581,8 +581,8 @@ void SignalGenerator::Run() {
                   double xe2, ye2, ze2, te2;
                   int status;
                   fDrift->DriftElectron(xe,ye,ze,te);
-                  fDrift->GetElectronEndpoint(0, xe1, ye1, ze1, te1, xe2, ye2, ze2, te2, status);
-                  if(WireIsHit(status,xe2,ye2)) {
+                  fDrift->GetElectronEndpoint(fDrift->GetNumberOfElectronEndpoints()-1, xe1, ye1, ze1, te1, xe2, ye2, ze2, te2, status);
+                  if(WireIsHit(status,xe2,ye2,ze2)) {
                     nDetEl++;
                   }
                   nInitEl++;
