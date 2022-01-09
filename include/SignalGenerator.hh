@@ -110,6 +110,7 @@ class SignalGenerator {
     bool signalCFD;
     bool fullChamber;
     bool muonDist;
+    bool debugging;
 
     double fBinWidth;
     int fNbins;

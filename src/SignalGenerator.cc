@@ -19,6 +19,7 @@ SignalGenerator::SignalGenerator(AnalysisManager* an, std::string in) : anManage
   driftRKF=false;
   visualizeChamber = false;
   visualizeSignal = false;
+  debugging = false;
   fBinWidth = 0.;
   fNbins = 0;
   comp=0;
@@ -110,7 +111,7 @@ void SignalGenerator::ReadConfigFile(){
 	particleType = OptionContainer::GetInstance().GetOption<std::string>("Particle.Type");
 	nSim = OptionContainer::GetInstance().GetOption<int>("Particle.Number");
 	avSize = OptionContainer::GetInstance().GetOption<int>("Tracking.AvalancheSize");
-
+  debugging = OptionContainer::GetInstance().GetOption<bool>("Tracking.Debugging");
 }
 
 void SignalGenerator::makeGas(){
@@ -312,9 +313,9 @@ void SignalGenerator::SetTracking(){
 		else fDrift->DisableAttachment();
 	}
 	fTrackHeed = new Garfield::TrackHeed();
-        fTrackHeed->SetSensor(fSensor);
-        fTrackHeed->SetParticle(particleType);
-//	fTrackHeed->EnableDebugging();
+  fTrackHeed->SetSensor(fSensor);
+  fTrackHeed->SetParticle(particleType);
+  if (debugging) fTrackHeed->EnableDebugging();
 	fTrackHeed->EnableDeltaElectronTransport();
 
 }

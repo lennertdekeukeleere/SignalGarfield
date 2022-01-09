@@ -22,6 +22,7 @@ OptionContainer::OptionContainer(std::string configName) {
     ("Tracking.DriftIons", po::value<bool>()->default_value(false), "Drift only electrons (false) of drift ions too (true)")
     ("Tracking.View", po::value<bool>()->default_value(false), "View drift lines (true) or not (false)")
     ("Tracking.AvalancheSize", po::value<int>()->default_value(1000), "Set limit on the avalanche size")
+    ("Tracking.Debugging", po::value<bool>()->default_value(false), "Enable debugging (true) or not (false)")
     ("Field.COMSOL", po::value<bool>()->default_value(false), "Field from COMSOL (true) or Garfield (false)")
     ("Field.View", po::value<bool>()->default_value(false), "Draw a fieldview (true) or not (false)")
     ("Field.PlotProfileCell", po::value<int>()->default_value(0), "Draw the profile of the electric field for cell with number x")
